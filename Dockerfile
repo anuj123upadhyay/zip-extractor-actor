@@ -1,8 +1,9 @@
 # First, specify the base Docker image.
 # You can see the Docker images from Apify at https://hub.docker.com/r/apify/.
 # You can also use any other image from Docker Hub.
-FROM apify/actor-python:3.13
+FROM apify/actor-python:3.11
 
+# Switch to the myuser account for security
 USER myuser
 
 # Second, copy just requirements.txt into the Actor image,
@@ -18,7 +19,7 @@ RUN echo "Python version:" \
  && echo "Pip version:" \
  && pip --version \
  && echo "Installing dependencies:" \
- && pip install -r requirements.txt \
+ && pip install --no-cache-dir -r requirements.txt \
  && echo "All installed Python packages:" \
  && pip freeze
 

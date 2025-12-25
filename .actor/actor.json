@@ -1,13 +1,46 @@
 {
 	"actorSpecification": 1,
 	"name": "zip-download-extraction-scraper",
-	"title": "Empty Python project",
-	"description": "Empty project in Python.",
-	"version": "0.0",
+	"title": "ZIP Download & Extraction Scraper",
+	"description": "Production-grade ZIP downloader and extractor with retry logic, password support, duplicate handling, and real-time progress tracking. Perfect for data extraction, backup processing, and bulk file operations.",
+	"version": "0.1",
 	"buildTag": "latest",
-	"meta": {
-		"templateId": "python-empty",
-		"generatedBy": "<FILL-IN-MODEL>"
+	"environmentVariables": {},
+	"storages": {
+		"dataset": {
+			"actorSpecification": 1,
+			"title": "Extracted Files Metadata",
+			"description": "Metadata and manifest of all extracted files",
+			"views": {
+				"overview": {
+					"title": "Extraction Overview",
+					"transformation": {
+						"fields": [
+							"success",
+							"url",
+							"filename",
+							"files_extracted",
+							"bytes_downloaded",
+							"processing_time_seconds"
+						]
+					},
+					"display": {
+						"component": "table",
+						"properties": {}
+					}
+				}
+			}
+		}
 	},
-	"dockerfile": "../Dockerfile"
+	"categories": [
+		"AUTOMATION",
+		"TOOLS",
+		"DEVELOPER_TOOLS"
+	],
+	"meta": {
+		"templateId": "python-empty"
+	},
+	"dockerfile": "./Dockerfile",
+	"readme": "./README.md",
+	"input": "./INPUT_SCHEMA.json"
 }

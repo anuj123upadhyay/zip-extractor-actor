@@ -52,8 +52,9 @@ class ZipDownloadExtractor:
                 logger.info(f"Starting download: {url} (Attempt {attempt + 1}/{retries})")
                 
                 timeout_obj = aiohttp.ClientTimeout(total=timeout)
-                async with aiohttp.ClientSession(timeout=timeout_obj) as session:
-                    async with session.get(url, ssl=False, allow_redirects=True) as response:
+                connector = aiohttp.TCPConnector(ssl=True, limit=10)  # SECURITY FIX: SSL enabled
+                async with aiohttp.ClientSession(timeout=timeout_obj, connector=connector) as session:
+                    async with session.get(url, allow_redirects=True) as response:
                         if response.status != 200:
                             error_msg = f"HTTP {response.status} for {url}"
                             logger.error(error_msg)
@@ -152,27 +153,30 @@ class ZipDownloadExtractor:
                 for idx, file_info in enumerate(zip_ref.infolist()):
                     try:
                         # Security: Prevent path traversal attacks
-                        if '..' in file_info.filename or file_info.filename.startswith('/'):
+                        normalized_path = os.path.normpath(file_info.filename)
+                        if normalized_path.startswith('..') or os.path.isabs(normalized_path):
                             logger.warning(f"Skipping suspicious path: {file_info.filename}")
                             self.stats['skipped_files'] += 1
                             continue
                         
-                        target_path = os.path.join(extract_path, file_info.filename)
+                        target_path = os.path.join(extract_path, normalized_path)
                         
-                        # Handle duplicates
+                        # Handle duplicates - FIXED LOGIC
                         if os.path.exists(target_path):
                             if handle_duplicates == 'skip':
                                 logger.info(f"Skipping duplicate: {file_info.filename}")
                                 self.stats['skipped_files'] += 1
                                 continue
                             elif handle_duplicates == 'rename':
-                                base, ext = os.path.splitext(file_info.filename)
+                                # Handle full path with subdirectories correctly
+                                dir_path = os.path.dirname(target_path)
+                                filename = os.path.basename(target_path)
+                                base, ext = os.path.splitext(filename)
                                 counter = 1
-                                while os.path.exists(
-                                    os.path.join(extract_path, f"{base}_{counter}{ext}")
-                                ):
+                                while os.path.exists(target_path):
+                                    new_filename = f"{base}_{counter}{ext}"
+                                    target_path = os.path.join(dir_path, new_filename)
                                     counter += 1
-                                target_path = os.path.join(extract_path, f"{base}_{counter}{ext}")
                                 logger.info(f"Renamed duplicate to: {os.path.basename(target_path)}")
                             # else: overwrite (default behavior)
                         
@@ -238,8 +242,9 @@ class ZipDownloadExtractor:
         self.stats['start_time'] = asyncio.get_event_loop().time()
         self.stats['files_processed'] += 1
         
-        # Use Apify storage for better reliability
-        temp_dir = os.path.expanduser('~/.zip_processor_temp')
+        # Use Apify storage for better reliability - FIXED
+        # Use actor's temporary directory instead of hardcoded path
+        temp_dir = os.path.join(os.getcwd(), 'apify_storage', 'temp')
         os.makedirs(temp_dir, exist_ok=True)
         
         try:
@@ -339,17 +344,27 @@ async def main():
             
             logger.info(f"Received input: {json.dumps(actor_input, indent=2)}")
             
-            # Validate input
+            # Validate input - Enhanced empty input handling
             urls = actor_input.get('urls', [])
-            if isinstance(urls, str):
+            
+            # Handle requestListSources format: array of objects with 'url' property
+            if isinstance(urls, list) and len(urls) > 0 and isinstance(urls[0], dict):
+                urls = [item.get('url') for item in urls if item.get('url')]
+            elif isinstance(urls, str):
                 urls = [urls]
             
-            if not urls:
+            # Filter out empty strings and whitespace-only URLs
+            if isinstance(urls, list):
+                urls = [url.strip() for url in urls if url and isinstance(url, str) and url.strip()]
+            
+            # Handle empty input with detailed error message
+            if not urls or len(urls) == 0:
                 error_response = {
                     'success': False,
-                    'error': 'No URLs provided. Please provide "urls" array or string.',
+                    'error': 'No valid URLs provided. Please provide at least one ZIP file URL.',
+                    'error_details': 'URLs cannot be empty, null, or contain only whitespace.',
                     'input_schema': {
-                        'urls': 'string or array of strings (required)',
+                        'urls': 'array of URL objects (required)',
                         'extract_to_memory': 'boolean (default: false) - Delete extracted files after processing',
                         'keep_zip': 'boolean (default: false) - Keep downloaded ZIP file',
                         'password': 'string (optional) - Password for encrypted ZIPs',
@@ -357,7 +372,7 @@ async def main():
                         'timeout': 'number in seconds (default: 300)',
                     },
                     'example_input': {
-                        'urls': ['https://example.com/file.zip'],
+                        'urls': [{'url': 'https://example.com/file.zip'}],
                         'extract_to_memory': False,
                         'keep_zip': False,
                         'password': None,
@@ -365,8 +380,10 @@ async def main():
                         'timeout': 300,
                     }
                 }
-                logger.error("No URLs provided in input")
+                logger.error("❌ No valid URLs provided in input")
+                logger.error("Expected format: {'urls': [{'url': 'https://example.com/file.zip'}]}")
                 await Actor.push_data(error_response)
+                await Actor.fail()
                 return
             
             # Process options with defaults

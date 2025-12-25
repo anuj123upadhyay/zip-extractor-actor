@@ -1,0 +1,114 @@
+{
+  "title": "ZIP Download & Extraction Scraper",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "urls": {
+      "title": "ZIP File URLs",
+      "type": "array",
+      "description": "List of ZIP file URLs to download and extract. Each URL must be publicly accessible (https:// or http://). At least one URL is required.",
+      "editor": "requestListSources",
+      "minItems": 1,
+      "prefill": [
+        {
+          "url": "https://github.com/apify/apify-sdk-python/archive/refs/heads/master.zip"
+        }
+      ]
+    },
+    "extract_to_memory": {
+      "title": "Extract to Memory Only",
+      "type": "boolean",
+      "description": "If enabled, extracted files will be deleted after processing. Only metadata will be saved to the dataset. Useful for validating ZIP contents without keeping files.",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "keep_zip": {
+      "title": "Keep Downloaded ZIP Files",
+      "type": "boolean",
+      "description": "If enabled, the downloaded ZIP files will not be deleted after extraction. Disable this to save storage space.",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "password": {
+      "title": "ZIP Password (Optional)",
+      "type": "string",
+      "description": "Password for encrypted/protected ZIP files. Leave empty for unprotected archives.",
+      "editor": "textfield",
+      "isSecret": true,
+      "nullable": true
+    },
+    "handle_duplicates": {
+      "title": "Duplicate File Handling",
+      "type": "string",
+      "description": "How to handle duplicate files during extraction",
+      "enum": ["rename", "skip", "overwrite"],
+      "enumTitles": [
+        "Rename - Add suffix to duplicate files (file_1.txt, file_2.txt)",
+        "Skip - Keep existing files, ignore new ones",
+        "Overwrite - Replace existing files with new ones"
+      ],
+      "default": "rename",
+      "editor": "select"
+    },
+    "timeout": {
+      "title": "Download Timeout (seconds)",
+      "type": "integer",
+      "description": "Maximum time to wait for each file download. Increase for large files or slow connections.",
+      "default": 300,
+      "minimum": 30,
+      "maximum": 3600,
+      "unit": "seconds",
+      "editor": "number"
+    },
+    "max_file_size_mb": {
+      "title": "Max File Size (MB)",
+      "type": "integer",
+      "description": "Maximum allowed file size for downloads in megabytes. Downloads exceeding this limit will be skipped.",
+      "default": 1024,
+      "minimum": 1,
+      "maximum": 10240,
+      "unit": "MB",
+      "editor": "number"
+    },
+    "concurrent_downloads": {
+      "title": "Concurrent Downloads",
+      "type": "integer",
+      "description": "Number of ZIP files to download and process simultaneously. Higher values increase speed but use more memory.",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 10,
+      "editor": "number"
+    },
+    "enable_proxy": {
+      "title": "Enable Proxy",
+      "type": "boolean",
+      "description": "Use Apify proxy for downloads. Useful for accessing geo-restricted content or bypassing rate limits.",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "proxy_configuration": {
+      "title": "Proxy Configuration",
+      "type": "object",
+      "description": "Advanced proxy settings. Only used if 'Enable Proxy' is checked.",
+      "editor": "proxy",
+      "nullable": true
+    },
+    "file_type_filter": {
+      "title": "File Type Filter (Optional)",
+      "type": "string",
+      "description": "Extract only specific file types (comma-separated). Leave empty to extract all files. Example: .pdf,.csv,.json",
+      "editor": "textfield",
+      "nullable": true
+    },
+    "retry_failed_downloads": {
+      "title": "Retry Failed Downloads",
+      "type": "integer",
+      "description": "Number of times to retry failed downloads before giving up.",
+      "default": 3,
+      "minimum": 0,
+      "maximum": 10,
+      "editor": "number"
+    }
+  },
+  "required": ["urls"]
+}

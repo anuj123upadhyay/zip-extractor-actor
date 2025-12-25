@@ -1,7 +1,15 @@
 # Feel free to add your Python dependencies below. For formatting guidelines, see:
 # https://pip.pypa.io/en/latest/reference/requirements-file-format/
 
-apify < 4.0.0
-apify-client>=1.7.0
-aiohttp>=3.9.0
-python-dotenv>=1.0.0
+# Apify SDK and client
+apify>=2.0.0,<3.0.0
+apify-client>=1.7.0,<2.0.0
+
+# HTTP client for downloads
+aiohttp>=3.9.0,<4.0.0
+
+# Environment variables (optional)
+python-dotenv>=1.0.0,<2.0.0
+
+# Pydantic for data validation - constrained for Apify SDK compatibility
+pydantic>=2.10.0,<2.11.0

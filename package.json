@@ -1,0 +1,15 @@
+{
+  "name": "zip-download-extraction-scraper",
+  "version": "0.1",
+  "description": "Production-grade ZIP downloader and extractor with retry logic, password support, duplicate handling, and real-time progress tracking",
+  "author": "Anuj Upadhyay",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anuj123upadhyay/zip-extractor-actor"
+  },
+  "main": "src/__main__.py",
+  "scripts": {
+    "start": "python3 -m src"
+  }
+}
