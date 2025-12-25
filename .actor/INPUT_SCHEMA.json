@@ -6,9 +6,8 @@
     "urls": {
       "title": "ZIP File URLs",
       "type": "array",
-      "description": "List of ZIP file URLs to download and extract. Each URL must be publicly accessible (https:// or http://). At least one URL is required.",
+      "description": "List of ZIP file URLs to download and extract. Each URL must be publicly accessible (https:// or http://). If empty, a default test URL will be used for demonstration.",
       "editor": "requestListSources",
-      "minItems": 1,
       "prefill": [
         {
           "url": "https://github.com/apify/apify-sdk-python/archive/refs/heads/master.zip"
@@ -110,5 +109,5 @@
       "editor": "number"
     }
   },
-  "required": ["urls"]
+  "required": []
 }

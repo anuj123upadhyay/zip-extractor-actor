@@ -344,47 +344,41 @@ async def main():
             
             logger.info(f"Received input: {json.dumps(actor_input, indent=2)}")
             
-            # Validate input - Enhanced empty input handling
-            urls = actor_input.get('urls', [])
+            # Validate input - Enhanced empty input handling with default fallback
+            urls_raw = actor_input.get('urls', [])
             
-            # Handle requestListSources format: array of objects with 'url' property
-            if isinstance(urls, list) and len(urls) > 0 and isinstance(urls[0], dict):
-                urls = [item.get('url') for item in urls if item.get('url')]
-            elif isinstance(urls, str):
-                urls = [urls]
+            # Extract URLs from requestListSources format
+            urls = []
+            if isinstance(urls_raw, list):
+                for item in urls_raw:
+                    if isinstance(item, dict) and 'url' in item:
+                        # Extract URL string from dict
+                        url_str = item.get('url')
+                        if url_str and isinstance(url_str, str):
+                            urls.append(url_str.strip())
+                    elif isinstance(item, str):
+                        # Direct string URL
+                        urls.append(item.strip())
+            elif isinstance(urls_raw, str):
+                # Single string URL
+                urls = [urls_raw.strip()]
             
-            # Filter out empty strings and whitespace-only URLs
-            if isinstance(urls, list):
-                urls = [url.strip() for url in urls if url and isinstance(url, str) and url.strip()]
+            # Filter out empty strings
+            urls = [url for url in urls if url]
             
-            # Handle empty input with detailed error message
-            if not urls or len(urls) == 0:
-                error_response = {
-                    'success': False,
-                    'error': 'No valid URLs provided. Please provide at least one ZIP file URL.',
-                    'error_details': 'URLs cannot be empty, null, or contain only whitespace.',
-                    'input_schema': {
-                        'urls': 'array of URL objects (required)',
-                        'extract_to_memory': 'boolean (default: false) - Delete extracted files after processing',
-                        'keep_zip': 'boolean (default: false) - Keep downloaded ZIP file',
-                        'password': 'string (optional) - Password for encrypted ZIPs',
-                        'handle_duplicates': 'string (default: rename) - rename|skip|overwrite',
-                        'timeout': 'number in seconds (default: 300)',
-                    },
-                    'example_input': {
-                        'urls': [{'url': 'https://example.com/file.zip'}],
-                        'extract_to_memory': False,
-                        'keep_zip': False,
-                        'password': None,
-                        'handle_duplicates': 'rename',
-                        'timeout': 300,
-                    }
-                }
-                logger.error("❌ No valid URLs provided in input")
-                logger.error("Expected format: {'urls': [{'url': 'https://example.com/file.zip'}]}")
-                await Actor.push_data(error_response)
-                await Actor.fail()
-                return
+            # Handle empty input - Use default URL for daily testing instead of failing
+            if not urls:
+                logger.warning("⚠️ No URLs provided in input. Using default test URL for demonstration.")
+                logger.info("Expected format: {'urls': [{'url': 'https://example.com/file.zip'}]}")
+                
+                # Default URL for daily testing and demonstrations
+                default_url = 'https://github.com/apify/apify-sdk-python/archive/refs/heads/master.zip'
+                urls = [default_url]
+                
+                logger.info(f"📦 Using default test URL: {default_url}")
+                logger.info("This ensures the actor can be tested without manual input configuration.")
+            
+            logger.info(f"Processing {len(urls)} URL(s): {urls}")
             
             # Process options with defaults
             extract_to_memory = actor_input.get('extract_to_memory', False)
