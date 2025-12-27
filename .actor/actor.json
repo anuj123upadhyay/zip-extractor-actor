@@ -7,30 +7,7 @@
 	"buildTag": "latest",
 	"environmentVariables": {},
 	"storages": {
-		"dataset": {
-			"actorSpecification": 1,
-			"title": "Extracted Files Metadata",
-			"description": "Metadata and manifest of all extracted files",
-			"views": {
-				"overview": {
-					"title": "Extraction Overview",
-					"transformation": {
-						"fields": [
-							"success",
-							"url",
-							"filename",
-							"files_extracted",
-							"bytes_downloaded",
-							"processing_time_seconds"
-						]
-					},
-					"display": {
-						"component": "table",
-						"properties": {}
-					}
-				}
-			}
-		}
+		"dataset": "./DATASET_SCHEMA.json"
 	},
 	"categories": [
 		"AUTOMATION",
@@ -42,5 +19,6 @@
 	},
 	"dockerfile": "./Dockerfile",
 	"readme": "./README.md",
-	"input": "./INPUT_SCHEMA.json"
+	"input": "./INPUT_SCHEMA.json",
+	"output": "./OUTPUT_SCHEMA.json"
 }

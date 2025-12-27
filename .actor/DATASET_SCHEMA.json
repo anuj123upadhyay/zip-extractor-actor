@@ -1,0 +1,339 @@
+{
+  "actorSpecification": 1,
+  "views": {
+    "overview": {
+      "title": "Extraction Overview",
+      "description": "Summary of all processed ZIP files",
+      "transformation": {
+        "fields": [
+          "success",
+          "url",
+          "filename",
+          "files_extracted",
+          "bytes_downloaded",
+          "processing_time_seconds",
+          "skipped_files",
+          "corrupted_files",
+          "timestamp"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "success": {
+            "label": "Status",
+            "format": "badge"
+          },
+          "url": {
+            "label": "ZIP URL",
+            "format": "link"
+          },
+          "filename": {
+            "label": "Filename"
+          },
+          "files_extracted": {
+            "label": "Files Extracted",
+            "format": "number"
+          },
+          "bytes_downloaded": {
+            "label": "Size Downloaded",
+            "format": "bytes"
+          },
+          "processing_time_seconds": {
+            "label": "Processing Time",
+            "format": "duration"
+          },
+          "skipped_files": {
+            "label": "Skipped",
+            "format": "number"
+          },
+          "corrupted_files": {
+            "label": "Corrupted",
+            "format": "number"
+          },
+          "timestamp": {
+            "label": "Completed At",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "extractedFiles": {
+      "title": "Extracted Files Details",
+      "description": "Detailed list of all extracted files from each ZIP",
+      "transformation": {
+        "unwind": ["extracted_files"],
+        "fields": [
+          "filename",
+          "extracted_files.path",
+          "extracted_files.size",
+          "extracted_files.type",
+          "extracted_files.modified"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "filename": {
+            "label": "Source ZIP"
+          },
+          "extracted_files.path": {
+            "label": "File Path"
+          },
+          "extracted_files.size": {
+            "label": "File Size",
+            "format": "bytes"
+          },
+          "extracted_files.type": {
+            "label": "Type"
+          },
+          "extracted_files.modified": {
+            "label": "Modified Date",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "summary": {
+      "title": "Processing Summary",
+      "description": "Overall statistics for the entire run",
+      "transformation": {
+        "fields": [
+          "report_type",
+          "total_urls_processed",
+          "successful_extractions",
+          "failed_extractions",
+          "total_bytes_downloaded",
+          "total_files_extracted",
+          "total_skipped_files",
+          "total_corrupted_files",
+          "total_errors",
+          "processing_duration_seconds",
+          "timestamp"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "report_type": {
+            "label": "Report Type"
+          },
+          "total_urls_processed": {
+            "label": "URLs Processed",
+            "format": "number"
+          },
+          "successful_extractions": {
+            "label": "Successful",
+            "format": "number"
+          },
+          "failed_extractions": {
+            "label": "Failed",
+            "format": "number"
+          },
+          "total_bytes_downloaded": {
+            "label": "Total Downloaded",
+            "format": "bytes"
+          },
+          "total_files_extracted": {
+            "label": "Total Files",
+            "format": "number"
+          },
+          "total_skipped_files": {
+            "label": "Skipped Files",
+            "format": "number"
+          },
+          "total_corrupted_files": {
+            "label": "Corrupted Files",
+            "format": "number"
+          },
+          "total_errors": {
+            "label": "Errors",
+            "format": "number"
+          },
+          "processing_duration_seconds": {
+            "label": "Total Duration",
+            "format": "duration"
+          },
+          "timestamp": {
+            "label": "Completed At",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "errors": {
+      "title": "Errors & Failures",
+      "description": "Details of any failed extractions",
+      "transformation": {
+        "fields": [
+          "success",
+          "url",
+          "error",
+          "error_type",
+          "timestamp"
+        ],
+        "limit": 100
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "success": {
+            "label": "Status",
+            "format": "badge"
+          },
+          "url": {
+            "label": "Failed URL",
+            "format": "link"
+          },
+          "error": {
+            "label": "Error Message"
+          },
+          "error_type": {
+            "label": "Error Type"
+          },
+          "timestamp": {
+            "label": "Time",
+            "format": "date"
+          }
+        }
+      }
+    }
+  },
+  "fields": {
+    "success": {
+      "type": "boolean",
+      "title": "Success Status",
+      "description": "Whether the ZIP file was successfully processed"
+    },
+    "url": {
+      "type": "string",
+      "title": "ZIP URL",
+      "description": "Original URL of the ZIP file"
+    },
+    "filename": {
+      "type": "string",
+      "title": "Filename",
+      "description": "Downloaded ZIP filename"
+    },
+    "files_extracted": {
+      "type": "integer",
+      "title": "Files Extracted",
+      "description": "Total count of successfully extracted files"
+    },
+    "bytes_downloaded": {
+      "type": "integer",
+      "title": "Bytes Downloaded",
+      "description": "Total bytes downloaded (ZIP file size)"
+    },
+    "processing_time_seconds": {
+      "type": "number",
+      "title": "Processing Time",
+      "description": "Time taken to download and extract in seconds"
+    },
+    "extracted_files": {
+      "type": "array",
+      "title": "Extracted Files",
+      "description": "Detailed manifest of all extracted files",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "File Path",
+            "description": "Relative path of the extracted file"
+          },
+          "size": {
+            "type": "integer",
+            "title": "File Size",
+            "description": "Size of the file in bytes"
+          },
+          "type": {
+            "type": "string",
+            "title": "File Type",
+            "description": "File extension (e.g., .pdf, .jpg)"
+          },
+          "modified": {
+            "type": "string",
+            "title": "Modified Date",
+            "description": "Last modified timestamp from ZIP metadata"
+          }
+        }
+      }
+    },
+    "skipped_files": {
+      "type": "integer",
+      "title": "Skipped Files",
+      "description": "Files skipped due to duplicate handling or filters"
+    },
+    "corrupted_files": {
+      "type": "integer",
+      "title": "Corrupted Files",
+      "description": "Files that failed extraction due to corruption"
+    },
+    "timestamp": {
+      "type": "string",
+      "title": "Timestamp",
+      "description": "Completion timestamp in ISO 8601 format"
+    },
+    "error": {
+      "type": "string",
+      "title": "Error Message",
+      "description": "Error message if extraction failed"
+    },
+    "error_type": {
+      "type": "string",
+      "title": "Error Type",
+      "description": "Type/category of the error"
+    },
+    "report_type": {
+      "type": "string",
+      "title": "Report Type",
+      "description": "Type of report (e.g., 'summary')"
+    },
+    "total_urls_processed": {
+      "type": "integer",
+      "title": "Total URLs Processed",
+      "description": "Total number of ZIP URLs processed"
+    },
+    "successful_extractions": {
+      "type": "integer",
+      "title": "Successful Extractions",
+      "description": "Number of successfully extracted ZIPs"
+    },
+    "failed_extractions": {
+      "type": "integer",
+      "title": "Failed Extractions",
+      "description": "Number of failed extractions"
+    },
+    "total_bytes_downloaded": {
+      "type": "integer",
+      "title": "Total Bytes Downloaded",
+      "description": "Total bytes downloaded across all ZIPs"
+    },
+    "total_files_extracted": {
+      "type": "integer",
+      "title": "Total Files Extracted",
+      "description": "Total count of extracted files across all ZIPs"
+    },
+    "total_skipped_files": {
+      "type": "integer",
+      "title": "Total Skipped Files",
+      "description": "Total count of skipped files"
+    },
+    "total_corrupted_files": {
+      "type": "integer",
+      "title": "Total Corrupted Files",
+      "description": "Total count of corrupted files"
+    },
+    "total_errors": {
+      "type": "integer",
+      "title": "Total Errors",
+      "description": "Total number of errors encountered"
+    },
+    "processing_duration_seconds": {
+      "type": "number",
+      "title": "Processing Duration",
+      "description": "Total processing time in seconds"
+    }
+  }
+}

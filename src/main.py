@@ -417,7 +417,7 @@ async def main():
             
             # Push comprehensive summary
             summary = {
-                'type': 'summary',
+                'report_type': 'summary',
                 'total_urls_processed': processor.stats['files_processed'],
                 'successful_extractions': sum(1 for r in results if r.get('success')),
                 'failed_extractions': sum(1 for r in results if not r.get('success')),

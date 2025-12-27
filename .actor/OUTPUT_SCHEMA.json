@@ -1,0 +1,38 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "ZIP Extraction Results",
+  "description": "Extracted ZIP file data with detailed file manifests and processing statistics",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "string",
+      "title": "All Results",
+      "description": "Complete extraction results with file details",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "overview": {
+      "type": "string",
+      "title": "Overview",
+      "description": "Summary of all processed ZIP files",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=overview"
+    },
+    "extractedFiles": {
+      "type": "string",
+      "title": "Extracted Files",
+      "description": "Detailed list of all extracted files",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=extractedFiles"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Overall processing statistics",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=summary"
+    },
+    "errors": {
+      "type": "string",
+      "title": "Errors",
+      "description": "Failed extractions and error details",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=errors"
+    }
+  }
+}

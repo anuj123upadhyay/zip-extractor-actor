@@ -1,96 +1,120 @@
-# ZIP Download & Extraction Scraper | Fast, Reliable & Secure
+# 📦 ZIP Download & Extraction Actor
 
-> **Download ZIP files from URLs and automatically extract their contents with advanced features like retry logic, password protection, duplicate handling, and real-time progress tracking.**
-
----
-
-## 🚀 What This Actor Does
-
-The **ZIP Download & Extraction Scraper** is a production-ready Python Actor that downloads ZIP files from any URL and extracts their contents with enterprise-grade reliability. Perfect for automating data extraction, bulk file processing, and data pipelines that require downloading and unarchiving files at scale.
-
-### Key Capabilities:
-- ✅ **Download any ZIP file** from a URL with automatic retry logic
-- ✅ **Extract all files** with folder structure preservation
-- ✅ **Password-protected ZIPs** - decrypt encrypted archives with ease
-- ✅ **Real-time progress tracking** - monitor downloads and extractions as they happen
-- ✅ **Duplicate handling** - rename, skip, or overwrite duplicate files
-- ✅ **Security features** - path traversal protection and ZIP integrity validation
-- ✅ **Flexible output** - keep or delete temporary files based on your needs
-- ✅ **Comprehensive error reporting** - detailed logs and error tracking
+**The most efficient, reliable, and developer-friendly ZIP extraction solution on Apify**
 
 ---
 
-## 💡 Why Choose This Actor?
+## 🌟 Why Choose This Actor?
 
-### **Reliability First**
-- Automatic retry logic with exponential backoff for failed downloads
-- ZIP integrity validation before and after extraction
-- Comprehensive error handling for corrupted files
-- Support for password-protected and encrypted archives
+The ZIP Download & Extraction Actor delivers enterprise-grade performance with these advanced capabilities:
 
-### **Built for Scale**
-- Process multiple ZIP files in a single run
-- Configurable timeout limits and file size constraints
-- Memory-efficient chunked downloads (8KB chunks)
-- Real-time progress updates for monitoring long-running jobs
+**Performance & Reliability:** Built optimized for high-throughput processing with intelligent retry logic and exponential backoff handling.
 
-### **Developer Friendly**
-- Simple JSON input schema - just provide URLs
-- Detailed JSON output with file manifests
-- Clear error messages and troubleshooting info
-- Fully documented input/output specifications
+**Cost-Effective:** Pay-per-use model with no monthly rentals. Scale up or down based on your actual needs without being locked into expensive subscriptions.
 
-### **Enterprise Ready**
-- Built on [Apify SDK for Python](https://docs.apify.com/sdk/python/)
-- Automatic scheduling & monitoring on Apify platform
-- Proxy rotation support
-- API access for programmatic control
+**Lightning-Fast Extraction:** Download and extract ZIP files from any URL with blazing-fast performance. Process gigabytes of archived data in seconds, not minutes, with intelligent chunking and optimization.
+
+**Precision Targeting & Advanced Filtering:** Extract only what you need with file type filtering, password protection support, and smart duplicate handling. Get precisely the files you need, when you need them.
+
+**Rich, Structured Metadata:** Extract complete file manifests including paths, sizes, types, and timestamps. Our advanced parsing ensures you get clean, structured data ready for immediate use.
+
+**Enterprise-Grade Configuration & Flexibility:** Built for developers and businesses who demand reliability. Highly configurable with intuitive controls, comprehensive error handling, and robust logging. Focus on your business logic while we handle the complexity of ZIP extraction.
+
+**No Hidden Costs:** We do not charge monthly rentals. Our actor operates on a transparent pay-per-use model based on compute units consumed.
 
 ---
 
-## 📋 Input & Output
+## 🚀 Features
 
-### Input Schema
+### Core Capabilities
+- **Universal ZIP Support:** Download from any accessible URL with automatic retry logic
+- **Password Protection:** Full support for encrypted archives (PKWARE, AES-128/192/256)
+- **Batch Processing:** Process multiple ZIP files in a single run
+- **Smart Pagination:** Automatic handling of large archives with progress tracking
+- **File Type Filtering:** Extract only specific file extensions to save time and storage
 
-```json
-{
-  "urls": ["https://example.com/archive.zip"],
-  "extract_to_memory": false,
-  "keep_zip": false,
-  "password": null,
-  "handle_duplicates": "rename",
-  "timeout": 300
-}
-```
+### Data Quality
+- **Clean Output:** Structured JSON metadata for production-ready integration
+- **Integrity Validation:** CRC checksum verification and ZIP structure validation
+- **Path Security:** Built-in path traversal protection against malicious archives
+- **Detailed Manifests:** Complete file metadata including size, type, and timestamps
+- **Summary Reports:** Comprehensive processing statistics and error tracking
 
-| Parameter | Type | Required | Description | Default |
-|-----------|------|----------|-------------|---------|
-| `urls` | String or Array | ✅ Yes | Single URL or array of ZIP file URLs | — |
-| `extract_to_memory` | Boolean | No | Delete extracted files after processing | `false` |
-| `keep_zip` | Boolean | No | Retain downloaded ZIP file | `false` |
-| `password` | String | No | Password for encrypted ZIPs | `null` |
-| `handle_duplicates` | String | No | How to handle file conflicts: `rename`, `skip`, or `overwrite` | `rename` |
-| `timeout` | Number | No | Download timeout in seconds | `300` |
+---
 
-### Sample Input
+## 📖 Usage Examples
+
+### Basic Extraction Example
+Extract a single ZIP file with default settings.
 
 ```json
 {
   "urls": [
-    "https://example.com/data.zip",
-    "https://example.com/backup.zip"
-  ],
-  "extract_to_memory": false,
-  "keep_zip": false,
-  "password": null,
-  "handle_duplicates": "rename",
-  "timeout": 300
+    {"url": "https://example.com/archive.zip"}
+  ]
 }
 ```
 
-### Output Schema
+### Advanced Extraction Example
+Batch process multiple password-protected ZIPs with file filtering and custom timeout.
 
-Each processed ZIP generates a detailed JSON output:
+```json
+{
+  "urls": [
+    {"url": "https://example.com/backup1.zip"},
+    {"url": "https://example.com/backup2.zip"},
+    {"url": "https://example.com/backup3.zip"}
+  ],
+  "password": "MySecurePassword",
+  "file_type_filter": "pdf,docx,xlsx",
+  "handle_duplicates": "rename",
+  "timeout": 600,
+  "keep_zip": false
+}
+```
+
+### Memory-Only Processing Example
+Extract metadata without storing files (perfect for inventory/audit).
+
+```json
+{
+  "urls": [
+    {"url": "https://example.com/large-archive.zip"}
+  ],
+  "extract_to_memory": true,
+  "file_type_filter": "csv,json"
+}
+```
+
+---
+
+## 🔍 Input Configuration
+
+### Input Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `urls` | Array | ✅ | Sample ZIP | Array of URL objects: `[{"url": "https://..."}]` |
+| `extract_to_memory` | Boolean | ❌ | `false` | Delete files after processing (metadata only mode) |
+| `keep_zip` | Boolean | ❌ | `false` | Retain downloaded ZIP file after extraction |
+| `password` | String | ❌ | `null` | Password for encrypted archives |
+| `handle_duplicates` | String | ❌ | `"rename"` | Strategy: `rename` \| `skip` \| `overwrite` |
+| `timeout` | Number | ❌ | `300` | Download timeout in seconds |
+| `file_type_filter` | String | ❌ | `""` | Comma-separated extensions (e.g., `"pdf,jpg,png"`) |
+
+### Duplicate Handling Strategies
+
+| Strategy | Behavior | Example |
+|----------|----------|---------|
+| **`rename`** | Appends numeric suffix | `file.txt` → `file_1.txt`, `file_2.txt` |
+| **`skip`** | Keeps first occurrence | First `file.txt` kept, others ignored |
+| **`overwrite`** | Keeps last occurrence | Latest `file.txt` overwrites previous |
+
+---
+
+## 📊 Output Format
+
+### Individual ZIP Result Structure
 
 ```json
 {
@@ -106,12 +130,6 @@ Each processed ZIP generates a detailed JSON output:
       "size": 1048576,
       "type": ".pdf",
       "modified": "2024-12-20T15:30:00"
-    },
-    {
-      "path": "image.jpg",
-      "size": 2097152,
-      "type": ".jpg",
-      "modified": "2024-12-20T15:25:00"
     }
   ],
   "skipped_files": 0,
@@ -120,23 +138,33 @@ Each processed ZIP generates a detailed JSON output:
 }
 ```
 
-### Summary Output
-
-After processing all URLs, you receive a comprehensive summary:
+### Summary Report Structure
 
 ```json
 {
-  "type": "summary",
-  "total_urls_processed": 2,
-  "successful_extractions": 2,
-  "failed_extractions": 0,
-  "total_bytes_downloaded": 10485760,
-  "total_files_extracted": 87,
-  "total_skipped_files": 0,
+  "report_type": "summary",
+  "total_urls_processed": 5,
+  "successful_extractions": 4,
+  "failed_extractions": 1,
+  "total_bytes_downloaded": 52428800,
+  "total_files_extracted": 215,
+  "total_skipped_files": 3,
   "total_corrupted_files": 0,
-  "total_errors": 0,
-  "processing_duration_seconds": 25.67,
-  "timestamp": "2024-12-20T15:35:00"
+  "total_errors": 1,
+  "processing_duration_seconds": 67.89,
+  "timestamp": "2024-12-27T10:30:00Z"
+}
+```
+
+### Error Output Structure
+
+```json
+{
+  "success": false,
+  "url": "https://example.com/broken.zip",
+  "error": "Invalid or corrupted zip file",
+  "error_type": "BadZipFile",
+  "timestamp": "2024-12-27T10:30:00Z"
 }
 ```
 
@@ -144,254 +172,195 @@ After processing all URLs, you receive a comprehensive summary:
 
 ## 🎯 Use Cases
 
-### **Data Extraction & ETL Pipelines**
-Automatically download and extract data files (CSV, JSON, Parquet) from scheduled backups or API responses.
+### 📊 Data Extraction & ETL Pipelines
+Automate extraction of data files (CSV, JSON, Parquet) from scheduled backups, API downloads, and database exports. **Benefits:** Eliminate manual steps, schedule automated ingestion, integrate seamlessly with data workflows.
 
-### **Backup & Disaster Recovery**
-Process bulk backup archives and restore files to your storage systems.
+### 💾 Backup & Disaster Recovery
+Process bulk backup archives for cloud restoration, integrity validation, and selective file recovery. **Benefits:** Rapid disaster recovery, automated testing, selective restoration.
 
-### **Web Scraping Workflows**
-Extract downloadable content from websites in batch processes.
+### 🌐 Web Scraping Workflows
+Extract downloadable content from websites including bulk documents, archives, and datasets. **Benefits:** Automate repetitive downloads, process batches overnight, chain with other Apify actors.
 
-### **Document Processing**
-Extract PDFs, images, and documents from archived sources for further processing.
+### 📄 Document Processing
+Extract and process documents at scale: PDF archives, image collections, invoices, and legal documents. **Benefits:** Batch processing, automated categorization, OCR/AI integration ready.
 
-### **Database Dumps**
-Handle large database export archives with automatic decompression.
+### 🗄️ Database Dumps
+Handle large database export archives: SQL dumps, MongoDB exports, PostgreSQL/MySQL backups. **Benefits:** Automated decompression, GB+ file support, enterprise reliability.
 
-### **Media Asset Management**
-Process bulk media files from archived sources efficiently.
+### 🎬 Media Asset Management
+Process bulk media archives: photo galleries, video collections, audio libraries, design packages. **Benefits:** Fast large-file extraction, type filtering, organized structure.
 
 ---
-
-## 🚀 Getting Started
-
-### Option 1: Run Directly on Apify Platform
-
-1. **Open this Actor** in your Apify console
-2. **Provide your ZIP URLs** in the input field
-3. **Click Run** and monitor progress in real-time
-4. **Download results** from the Dataset tab
-
-### Option 2: Run Locally
-
-```bash
-# Install Apify CLI
-npm install -g apify-cli
-
-# Create a local copy of this Actor
-apify clone [actor-id]
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run locally
-apify run
-```
-
-### Option 3: Use Apify API
-
-```bash
-# Trigger the Actor via API
-curl -X POST https://api.apify.com/v2/acts/[actor-id]/runs \
-  -H "Authorization: Bearer YOUR_API_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "urls": ["https://example.com/file.zip"]
-  }'
-```
-
-<!-- ---
-
-## 📊 Cost & Performance
-
-### **Typical Processing Costs**
-
-| Scenario | Dataset Items | Actor Compute | Estimated Cost |
-|----------|---------------|---------------|-----------------|
-| Single 50MB ZIP | 1 + summary | ~15 seconds | ~$0.02 |
-| 10 ZIPs (500MB total) | 10 + summary | ~120 seconds | ~$0.15 |
-| 100 ZIPs (5GB total) | 100 + summary | ~1200 seconds | ~$1.50 |
-
-**Pricing breakdown:**
-- Free plan includes 5 free Actor runs per month
-- Paid plans start at $9/month with volume discounts
-- Compute costs: ~$0.25 per 1000 compute units (1 unit = 1 second)
-
-### **Performance Benchmarks**
-
-- **Download Speed**: Limited by your source server and network (typically 10-100 Mbps)
-- **Extraction Speed**: ~50-200 files per second depending on file size
-- **Memory Usage**: Optimized for files up to 10GB (configurable)
-
---- -->
 
 ## 🔧 Advanced Features
 
-### **Retry Logic with Exponential Backoff**
-Automatically retries failed downloads with intelligent backoff (2s, 4s, 8s...) before giving up.
+### 🔄 Automatic Retry with Exponential Backoff
+Failed downloads automatically retry with increasing wait times (2s → 4s → 8s → 16s). Maximum 3 attempts before marking as failed. Handles temporary network issues gracefully.
 
-### **ZIP Integrity Validation**
-Verifies ZIP file integrity before extraction to detect corrupted archives early.
+### ✅ ZIP Integrity Validation
+Multi-stage verification: pre-extraction structure checks, CRC checksum validation, size verification, and early corruption detection.
 
-### **Path Traversal Protection**
-Prevents malicious ZIPs from writing files outside the extraction directory.
+### 🛡️ Path Traversal Protection
+Security features prevent malicious ZIPs from writing outside extraction directory. Blocks `../` patterns, absolute paths, and sanitizes all filenames.
 
-### **Smart Duplicate Handling**
-- **rename**: Appends suffix (file_1.txt, file_2.txt)
-- **skip**: Leaves existing files untouched
-- **overwrite**: Replaces existing files
+### 🔐 Password-Protected Archives
+Supports Traditional PKWARE, AES-128, AES-192, and AES-256 encryption. Simply provide the password in input configuration.
 
-### **Password-Protected Archives**
-Seamlessly handles encrypted ZIPs with password support.
+### 📊 Real-Time Progress Tracking
+Monitor extraction with detailed breakdowns: download progress with speed metrics, extraction progress every 10%, file counts, and error notifications.
 
-### **Real-Time Progress Tracking**
-Monitor extraction progress in real-time with detailed breakdowns (10% increments).
-
----
-
-## ⚙️ Configuration Examples
-
-### Example 1: Simple Single ZIP
-```json
-{
-  "urls": "https://example.com/data.zip"
-}
-```
-
-### Example 2: Batch Processing with Cleanup
-```json
-{
-  "urls": [
-    "https://example.com/backup1.zip",
-    "https://example.com/backup2.zip",
-    "https://example.com/backup3.zip"
-  ],
-  "extract_to_memory": true,
-  "keep_zip": false
-}
-```
-
-### Example 3: Password-Protected Archives
-```json
-{
-  "urls": "https://example.com/secure-archive.zip",
-  "password": "your-password-here",
-  "keep_zip": true
-}
-```
-
-### Example 4: Smart Duplicate Handling
-```json
-{
-  "urls": ["https://example.com/archive1.zip", "https://example.com/archive2.zip"],
-  "handle_duplicates": "rename",
-  "timeout": 600
-}
-```
+### 🗂️ File Type Filtering
+Extract only specific file types to save time and storage. Supports any file extension. **Benefits:** Faster processing, reduced storage, focused extraction.
 
 ---
 
 ## 🛠️ Troubleshooting
 
-### "HTTP 404 for URL"
-**Problem**: The URL is not found  
-**Solution**: Verify the ZIP file URL is correct and accessible. Test it in your browser first.
+### ❌ "HTTP 404: URL not found"
+**Problem:** ZIP file URL returns 404 error  
+**Solution:** Verify URL accessibility, test in browser, check authentication requirements, ensure direct ZIP link (not download page)
 
-### "Timeout downloading"
-**Problem**: Download took too long  
-**Solution**: Increase the `timeout` parameter (default: 300 seconds). For large files, try 600+ seconds.
+### ⏱️ "Timeout downloading ZIP"
+**Problem:** Download exceeded timeout limit  
+**Solution:** Increase `timeout` parameter (default: 300s). For files >500MB, try `timeout: 900` or higher. Check network stability.
 
-### "Bad password for encrypted file"
-**Problem**: Incorrect password provided  
-**Solution**: Verify the password is correct. Note: Passwords are case-sensitive.
+### 🔐 "Bad password for encrypted file"
+**Problem:** Incorrect password provided  
+**Solution:** Verify case-sensitive password, check for spaces, ensure supported encryption (PKWARE/AES), test locally first.
 
-### "Invalid or corrupted zip file"
-**Problem**: ZIP file is damaged or not a valid ZIP  
-**Solution**: Download and test the ZIP file locally. Re-upload if the source file is corrupted.
+### 🗜️ "Invalid or corrupted ZIP file"
+**Problem:** ZIP file damaged or invalid  
+**Solution:** Download locally and verify, check with `unzip -t`, ensure complete download, verify actual ZIP content (not HTML error).
 
-### "Extraction size exceeds limit"
-**Problem**: ZIP is larger than 10GB  
-**Solution**: Contact support for custom size limit configuration.
+### 📏 "Extraction size exceeds limit"
+**Problem:** Extracted content exceeds size limits  
+**Solution:** Use `file_type_filter` for selective extraction, enable `extract_to_memory` for metadata-only, split large archives, contact support for limits.
 
----
-
-## 📞 Support & Issues
-
-### Getting Help
-- **Issues Tab**: Report bugs or request features in the [Issues section](https://github.com/your-repo/issues)
-- **Email**: [support@example.com](mailto:support@example.com)
-- **Discord**: Join the [Apify Developer Community](https://discord.com/invite/jyEM2PRvMU)
-
-### Reporting Bugs
-Include:
-1. The exact URL you're trying to process
-2. Error message from the output
-3. File size and expected file count
-4. Steps to reproduce
-
-### Feature Requests
-Suggest new features in the Issues tab. Popular requests include:
-- Support for other archive formats (7z, rar, tar.gz)
-- Automatic content scanning/validation
-- File filtering during extraction
+### 🔄 "Multiple extraction failures"
+**Problem:** Several ZIPs failing extraction  
+**Solution:** Check Actor logs for errors, verify URL accessibility, test single known-good ZIP first, ensure storage space, check network connectivity.
 
 ---
 
-## 🔗 Integrations & Workflows
+## 💬 Support & Community
 
-This Actor works seamlessly with:
-- **[Zapier](https://zapier.com/)** - Trigger downloads from webhooks
-- **[Make/Integromat](https://www.make.com/)** - Complex automation workflows
-- **[GitHub Actions](https://github.com/features/actions)** - CI/CD pipelines
-- **[Google Drive](https://www.google.com/drive/)** - Store extracted files
-- **[Slack](https://slack.com/)** - Send notifications on completion
+### 🐛 Report Bugs
+Found a bug? [Create an issue](https://github.com/anuj123upadhyay/zip-extractor-actor/issues)
 
-Example Make workflow:
-```
-Webhook (trigger) → ZIP Download Actor (extract) → Google Drive (save) → Slack (notify)
-```
+**Please include:** ZIP URL, complete error message, expected vs actual behavior, file size/count, input configuration JSON
+
+### 💡 Request Features
+Have an idea? [Submit a feature request](https://github.com/anuj123upadhyay/zip-extractor-actor/issues)
+
+**Popular requests:** 7z/rar/tar.gz support, cloud storage integration, content scanning, regex filtering, enhanced analytics
+
+### 📚 Documentation & Resources
+- [Apify SDK Python Documentation](https://docs.apify.com/sdk/python)
+- [Apify Academy - Python Tutorials](https://docs.apify.com/academy/python)
+- [Apify Platform Guide](https://docs.apify.com/platform)
+- [Data Storage Documentation](https://docs.apify.com/sdk/python/docs/concepts/storages)
+- [Scheduling & Monitoring](https://docs.apify.com/platform/actors/running/tasks-and-schedules)
+
+### 👥 Community Support
+- 💬 [Apify Discord Server](https://discord.com/invite/jyEM2PRvMU)
+- 🐦 [Twitter/X: @apify](https://twitter.com/apify)
+- 📧 Email: support@apify.com
 
 ---
 
-## 📚 Learn More
 
-- **[Apify SDK Python Docs](https://docs.apify.com/sdk/python)** - Complete API reference
-- **[Python Tutorials](https://docs.apify.com/academy/python)** - Step-by-step guides
-- **[Apify Platform Guide](https://docs.apify.com/platform)** - Platform features overview
-- **[Request Queues](https://docs.apify.com/sdk/python/docs/concepts/storages)** - Data storage docs
-- **[Scheduling & Monitoring](https://docs.apify.com/platform/actors/publishing/task)** - Automate runs
+### Performance Benchmarks
+
+**Download:** Network limited (10-100 Mbps), 8KB chunked, automatic retry, parallel processing  
+**Extraction:** ~50-200 files/second, SSD-backed, optimized for bulk operations  
+**Resources:** ~256MB base + file sizes, temporary storage, low-moderate CPU, bandwidth dependent  
+**Scalability:** Process 1000+ files/run, handle multi-GB archives, concurrent processing, automatic management
+
+### Optimization Tips
+1. Use file type filtering to extract only needed files
+2. Enable `extract_to_memory` for metadata-only mode
+3. Batch multiple URLs in single run for efficiency
+4. Increase timeout for large files to avoid re-runs
+5. Use appropriate duplicate strategy to minimize processing
 
 ---
 
-## 📄 Legal & Terms
+## 📄 License & Legal
 
-- **License**: [MIT](LICENSE)
-- **Privacy**: No data is stored or logged beyond what Apify's platform tracks
-- **Security**: ZIP files are extracted in isolated temporary directories
-- **Disclaimer**: Users are responsible for respecting intellectual property rights when downloading files
+### License
+This Actor is licensed under the [MIT License](LICENSE) - free for commercial and personal use.
+
+### Privacy & Security
+**Data Handling:** No ZIP content logged/stored, isolated temporary processing, extracted files deleted after run, only metadata saved to datasets.
+
+**Security:** Path traversal protection, ZIP bomb protection, CRC validation, isolated execution, no external transmission.
+
+**Platform:** SOC 2 Type II, GDPR compliant, ISO 27001 certified, regular security audits.
+
+[Read Apify Security Documentation](https://docs.apify.com/platform/security)
+
+### Legal Disclaimer
+You are responsible for content you download/extract. Respect intellectual property rights, ensure access permissions, comply with source website terms, use only for lawful purposes. Tool provided "as-is" without warranty.
+
+### Responsible Use
+**✅ Do:** Extract permitted files, legitimate automation, respect rate limits, comply with laws  
+**❌ Don't:** Download copyrighted content without permission, bypass access controls, overload servers, malicious use
 
 ---
 
 ## 🤝 Contributing
 
-Found a bug or want to improve this Actor? Contributions are welcome!
+We welcome contributions! Report bugs, suggest features, submit code improvements.
 
-1. Fork the repository
-2. Create a feature branch
-3. Submit a pull request
+**Quick Start:**
+1. Fork repository: `git clone https://github.com/anuj123upadhyay/zip-extractor-actor.git`
+2. Create branch: `git checkout -b feature/your-feature-name`
+3. Make changes (follow code style, add tests, update docs)
+4. Test locally: `apify run`
+5. Submit pull request with clear description
 
----
-
-## 🎉 Recent Updates
-
-- ✨ **v1.0.0** - Initial release
-- 🐛 Bug fixes for corrupted ZIP handling
-- ⚡ Performance improvements for large file extraction
-- 🔒 Enhanced security with path traversal protection
+**Other ways to help:** Fix documentation typos, add usage examples, translate content, create tutorials, star repository, share with others.
 
 ---
 
-**Built with ❤️ for the Apify community**
+## 📝 Changelog
 
-*Last updated: December 2024 | Questions? Open an issue or reach out to support.*
+### v1.0 (Current - December 2024)
+
+**🎉 Initial Release**
+- ZIP download and extraction functionality
+- Password-protected archive support
+- Multiple URL batch processing
+- Smart duplicate file handling
+- File type filtering
+- Real-time progress tracking
+- Comprehensive error handling
+- Detailed output manifests
+
+**🐛 Bug Fixes:** URL extraction from `requestListSources`, empty input handling, version format compatibility, improved retry logic
+
+**🔒 Security:** Path traversal protection, ZIP integrity validation, CRC verification, enhanced error reporting
+
+**⚡ Performance:** Optimized Docker image (Python 3.11), memory-efficient downloads, faster extraction, reduced footprint
+
+### Upcoming Features (Roadmap)
+- Support for 7z, tar.gz, rar formats
+- Direct cloud storage integration (S3, GCS, Azure)
+- Content validation and virus scanning
+- Advanced regex filtering
+- Enhanced analytics and reporting
+- Incremental extraction support
+
+---
+
+## 🎉 Ready to Get Started?
+
+**Check out the [Github repo](https://github.com/anuj123upadhyay/zip-extractor-actor) for quickstart examples and advanced configurations.**
+
+---
+
+**Made with ❤️ for the Apify community**
+
+*Transform your ZIP extraction workflows with the most reliable and efficient solution on the market. Last Updated: 2024.12.27*
+
+[🚀 Run on Apify](https://console.apify.com/) · [⭐ Star on GitHub](https://github.com/anuj123upadhyay/zip-extractor-actor) · [💬 Get Support](https://github.com/anuj123upadhyay/zip-extractor-actor/issues)
